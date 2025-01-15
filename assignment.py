@@ -105,7 +105,16 @@ def generateHydrographics(sIndex,aIndex):
     roll1 = random.randint(1,6)
     roll2 = random.randint(1,6)
     totalindex = roll1 + roll2 - 7 + sIndex 
+    if sIndex <= 1:
+        totalindex = 0
+    elif aIndex <= 1 or aIndex >= 10:
+        totalindex -= 4
+        if totalindex < 0:
+            totalindex = 0
+        elif totalindex > 10:
+            totalindex = 10
     world['hydrographics'] = hydrographics[totalindex] #Sill don't know what the dm are
+    
     
 
 def generateGovernment(pIndex):
