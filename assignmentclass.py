@@ -59,8 +59,38 @@ valuesDict = ('starport','navalBase','scoutBase','gasGiant')
 namestring = 'POIUYTREWQASDFGHJKLMNBVCXZ0987654321'
 
 class genworld:
-    
-    def getsystemcontents():
+
+    starport  = ('A'  ,'A'  ,'A'  ,'B'  ,'B'  ,'C'  ,'C'  ,'D'  ,'E ' ,'E ' ,'X')
+    navalBase = ('no' ,'no' ,'no' ,'no' ,'no' ,'no' ,'yes','yes','yes','yes','yes')
+    scoutBase = ('no' ,'no' ,'no' ,'no' ,'no' ,'yes','yes','yes','yes','yes','yes')
+    gasGiant  = ('yes','yes','yes','yes','yes','yes','yes','yes','no' ,'no' ,'no')
+    size = (0,1,2,3,4,5,6,7,8,9,'A')
+    atmosphere = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F')
+    hydrographics = (0,1,2,3,4,5,6,7,8,9,'A')
+    population = (0,1,2,3,4,5,6,7,8,9,'A')
+    governmentLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D')
+    lawLevel = (0,1,2,3,4,5,6,7,8,9,'A','A','A','A','A','A','A','A','A','A')
+    techLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G')
+
+    values = (starport,navalBase,scoutBase,gasGiant)
+    valuesDict = ('starport','navalBase','scoutBase','gasGiant')
+    namestring = 'POIUYTREWQASDFGHJKLMNBVCXZ0987654321'
+
+
+    def __init__(self,):
+        world['name'] = self.genName()
+        self.getSystemContents()
+        sizeindex = self.genSize()
+        atindex = self.genAtmosphere(sizeindex)
+        popindex = self.genPop()
+        self.genHydro(sizeindex,atindex)
+        govindex = self.genGovt(popindex)
+        self.genLaw(govindex)
+        self.genTech(sizeindex,atindex,popindex)
+        for i in world:
+            print(' ',i,':',world[i])
+
+    def getSystemContents(self):
         for i in range(4):
             val = values[i]
             dictThing = valuesDict[i]
@@ -69,7 +99,7 @@ class genworld:
             totalindex = roll1 + roll2 - 2  #-2 so that is goes to the right index value
             world[dictThing] = val[totalindex]
 
-    def generateName():
+    def genName(self):
         name = ''
         for i in range(5):
             x = random.randint(0,35)
@@ -77,14 +107,14 @@ class genworld:
             name += stringval
         return name
 
-    def generateSize():
+    def genSize(self):
         roll1 = random.randint(1,6)
         roll2 = random.randint(1,6)
         totalindex = roll1 + roll2 - 2
         world['size']=size[totalindex]
         return totalindex
 
-    def generateAtmosphere(sIndex):
+    def genAtmosphere(self,sIndex):
         if sIndex==0:
             world['atmosphere']=atmosphere[0]
             return 0
@@ -95,14 +125,14 @@ class genworld:
             world['atmosphere'] = atmosphere[totalindex]
             return totalindex
 
-    def generatePopulation():
+    def genPop(self):
         roll1 = random.randint(1,6)
         roll2 = random.randint(1,6)
         totalindex = roll1 + roll2 - 2
         world['population'] = population[totalindex]
         return totalindex
 
-    def generateHydrographics(sIndex,aIndex):
+    def genHydro(self,sIndex,aIndex):
         roll1 = random.randint(1,6)
         roll2 = random.randint(1,6)
         totalindex = roll1 + roll2 - 7 + sIndex 
@@ -116,69 +146,72 @@ class genworld:
             totalindex = 10
         world['hydrographics'] = hydrographics[totalindex]
 
-    def generateGovernment(pIndex):
+    def genGovt(self,pIndex):
         roll1 = random.randint(1,6)
         roll2 = random.randint(1,6)
         totalindex = roll1 + roll2 - 7 + pIndex 
         world['government level'] = governmentLevel[totalindex]
         return totalindex
 
-    def generateLaw(gIndex):
+    def genLaw(self,gIndex):
         roll1 = random.randint(1,6)
         roll2 = random.randint(1,6)
         totalindex = roll1 + roll2 - 7 + gIndex 
         world['law level']= lawLevel[totalindex]
         return totalindex
 
-    def generateTech():
+    def genTech(self,sizeindex,atindex,popindex):
         totalindex = random.randint(1,6)
         if world['starport']=='A':
             totalindex += 6
+            print('1')
         if world['starport']=='B':
             totalindex += 4
         if world['starport']=='C':
             totalindex += 2
+            print('1')
         if world['starport']=='X':
             totalindex -= 4
+            print('1')
         if sizeindex <= 1:
             totalindex += 2
+            print('1')
         if 1 < sizeindex <= 4:
             totalindex += 1
+            print('1')
         if atindex <= 3 or 10 <= atindex <= 14:
             totalindex += 1
+            print('1')
         if world['hydrographics'] == 9:
             totalindex += 1
+            print('1')
         if world['hydrographics'] == 'A':
             totalindex += 2
+            print('1')
         if 1 <= popindex <= 5:
             totalindex += 1
+            print('1')
         if world['population'] == 9:
             totalindex += 2
+            print('1')
         if world['population'] == 'A':
             totalindex += 4
+            print('1')
         if world['government level'] == 0 or world['government level'] == 5:
             totalindex += 1
+            print('1')
         if world['government level'] == 'D':
             totalindex -= 2
+            print('1')
+        print(totalindex)
         world['tech level'] = techLevel[totalindex]
 
 
-    world['name'] = generateName()
-    getsystemcontents()
-    starportType = world['starport'] 
-    sizeindex = generateSize()
-    atindex = generateAtmosphere(sizeindex)
-    popindex = generatePopulation()
-    generateHydrographics(sizeindex,atindex)
-    govindex = generateGovernment(popindex)
-    generateLaw(govindex)
-    generateTech()
-
-
-
-
-for i in world:
-    print(' ',i,':',world[i])
-print('\n\n',world)
+print('world1')
+world1 = genworld()
+print('\nworld2')
+world2 = genworld()
+print('\nworld3')
+world3 = genworld()
 
 
