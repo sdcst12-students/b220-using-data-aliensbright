@@ -52,7 +52,7 @@ hydrographics = (0,1,2,3,4,5,6,7,8,9,'A')
 population = (0,1,2,3,4,5,6,7,8,9,'A')
 governmentLevel = (0,1,2,3,4,5,6,7,8,9,'A','A','A','A','A','A','A','A','A')
 lawLevel = (0,1,2,3,4,5,6,7,8,9,'A','A','A','A','A','A','A','A','A','A')
-techLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G')
+techLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','G')
 
 values = (starport,navalBase,scoutBase,gasGiant)
 valuesDict = ('starport','navalBase','scoutBase','gasGiant')
@@ -70,7 +70,7 @@ class genworld:
     population = (0,1,2,3,4,5,6,7,8,9,'A')
     governmentLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D')
     lawLevel = (0,1,2,3,4,5,6,7,8,9,'A','A','A','A','A','A','A','A','A','A')
-    techLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G')
+    techLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','G')
 
     values = (starport,navalBase,scoutBase,gasGiant)
     valuesDict = ('starport','navalBase','scoutBase','gasGiant')
@@ -136,10 +136,10 @@ class genworld:
         roll1 = random.randint(1,6)
         roll2 = random.randint(1,6)
         totalindex = roll1 + roll2 - 7 + sIndex 
-        if sIndex <= 1:
-            totalindex = 0
         if aIndex <= 1 or aIndex >= 10:
             totalindex -= 4
+        if sIndex <= 1:
+            totalindex = 0
         if totalindex < 0:
             totalindex = 0
         elif totalindex > 10:
@@ -162,56 +162,52 @@ class genworld:
 
     def genTech(self,sizeindex,atindex,popindex):
         totalindex = random.randint(1,6)
+        print(totalindex)
         if world['starport']=='A':
             totalindex += 6
-            print('1')
+            print(1)
         if world['starport']=='B':
             totalindex += 4
+            print(2)
         if world['starport']=='C':
             totalindex += 2
-            print('1')
+            print(3)
         if world['starport']=='X':
             totalindex -= 4
-            print('1')
+            print(4)
         if sizeindex <= 1:
             totalindex += 2
-            print('1')
+            print(5)
         if 1 < sizeindex <= 4:
             totalindex += 1
-            print('1')
+            print(6)
         if atindex <= 3 or 10 <= atindex <= 14:
             totalindex += 1
-            print('1')
+            print(7)
         if world['hydrographics'] == 9:
             totalindex += 1
-            print('1')
+            print(8)
         if world['hydrographics'] == 'A':
             totalindex += 2
-            print('1')
+            print(9)
         if 1 <= popindex <= 5:
             totalindex += 1
-            print('1')
+            print(10)
         if world['population'] == 9:
             totalindex += 2
-            print('1')
+            print(11)
         if world['population'] == 'A':
             totalindex += 4
-            print('1')
+            print(12)
         if world['government level'] == 0 or world['government level'] == 5:
             totalindex += 1
-            print('1')
+            print(13)
         if world['government level'] == 'D':
             totalindex -= 2
-            print('1')
+            print(14)
         print(totalindex)
-        world['tech level'] = techLevel[totalindex]
+        world['tech level'] = self.techLevel[totalindex]
 
-
-print('world1')
-world1 = genworld()
-print('\nworld2')
-world2 = genworld()
-print('\nworld3')
-world3 = genworld()
-
-
+for i in range(100):
+    print('world',i)
+    a = genworld()
