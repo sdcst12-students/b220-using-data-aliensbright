@@ -42,6 +42,9 @@ governmentLevel = ('No Government Structure.','Company/Corporation.','Participat
 lawLevel = ('No Prohibitions.','Body Pistols, Explosives, and Poison Gas Prohibited.','Portable Energy Weapons Prohibited.','Military Weapons Prohibited.','Light Assault Weapons Prohibited.','Concealable Firearms Prohibited.','Most Firearms Prohibited.','Shotguns Prohibited.','Open Possession of Long Bladed Weapons Prohibited.','Open Possession of any Weapon Prohibited.','Weapon Possession Prohibited.','','','','','','','','')
 techLevel = ('Stone Age. Primitive.','Bronze Age to Middle Ages.','Circa 1400 to 1700','Circa 1700 to 1860','Circa 1860 to 1900','Circa 1900 to 1939','Circa 1940 to 1969','Circa 1970 to 1979','Circa 1980 to 1989','Circa 1990 to 2000','Interstellar community','Average Imperial.','Average Imperial.','Above Average Imperial.','Above Average Imperial.','Technical Maximum Imperial.','Occasional non-Imperial.')
 '''
+
+valuesDict = ('starport','navalBase','scoutBase','gasGiant')
+namestring = 'POIUYTREWQASDFGHJKLMNBVCXZ0987654321'
 starport  = ('A'  ,'A'  ,'A'  ,'B'  ,'B'  ,'C'  ,'C'  ,'D'  ,'E ' ,'E ' ,'X')
 navalBase = ('no' ,'no' ,'no' ,'no' ,'no' ,'no' ,'yes','yes','yes','yes','yes')
 scoutBase = ('no' ,'no' ,'no' ,'no' ,'no' ,'yes','yes','yes','yes','yes','yes')
@@ -50,45 +53,28 @@ size = (0,1,2,3,4,5,6,7,8,9,'A')
 atmosphere = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F')
 hydrographics = (0,1,2,3,4,5,6,7,8,9,'A')
 population = (0,1,2,3,4,5,6,7,8,9,'A')
-governmentLevel = (0,1,2,3,4,5,6,7,8,9,'A','A','A','A','A','A','A','A','A')
+governmentLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D')
 lawLevel = (0,1,2,3,4,5,6,7,8,9,'A','A','A','A','A','A','A','A','A','A')
 techLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','G')
-
+world = {'starport':'','navalBase':'','scoutBase':'','gasGiant':'','name':'','size':'','atmosphere':'','hydrographics':'','population':'','government level':'','law level':'','tech level':'',}
 values = (starport,navalBase,scoutBase,gasGiant)
-valuesDict = ('starport','navalBase','scoutBase','gasGiant')
-namestring = 'POIUYTREWQASDFGHJKLMNBVCXZ0987654321'
 
-class genworld:
+class genWorld:
 
-    starport  = ('A'  ,'A'  ,'A'  ,'B'  ,'B'  ,'C'  ,'C'  ,'D'  ,'E ' ,'E ' ,'X')
-    navalBase = ('no' ,'no' ,'no' ,'no' ,'no' ,'no' ,'yes','yes','yes','yes','yes')
-    scoutBase = ('no' ,'no' ,'no' ,'no' ,'no' ,'yes','yes','yes','yes','yes','yes')
-    gasGiant  = ('yes','yes','yes','yes','yes','yes','yes','yes','no' ,'no' ,'no')
-    size = (0,1,2,3,4,5,6,7,8,9,'A')
-    atmosphere = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F')
-    hydrographics = (0,1,2,3,4,5,6,7,8,9,'A')
-    population = (0,1,2,3,4,5,6,7,8,9,'A')
-    governmentLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D')
-    lawLevel = (0,1,2,3,4,5,6,7,8,9,'A','A','A','A','A','A','A','A','A','A')
-    techLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','G')
-
-    values = (starport,navalBase,scoutBase,gasGiant)
     valuesDict = ('starport','navalBase','scoutBase','gasGiant')
     namestring = 'POIUYTREWQASDFGHJKLMNBVCXZ0987654321'
 
 
-    def __init__(self,):
-        world['name'] = self.genName()
-        self.getSystemContents()
-        sizeindex = self.genSize()
-        atindex = self.genAtmosphere(sizeindex)
-        popindex = self.genPop()
-        self.genHydro(sizeindex,atindex)
-        govindex = self.genGovt(popindex)
-        self.genLaw(govindex)
-        self.genTech(sizeindex,atindex,popindex)
-        for i in world:
-            print(' ',i,':',world[i])
+    def __init__(self):
+        self.sizeindex = self.genSize()
+        self.atindex = self.genAtmosphere(self.sizeindex)
+        self.popindex = self.genPop()
+        self.hydroindex = self.genHydro(self.sizeindex,self.atindex)
+        self.govindex = self.genGovt(self.popindex)
+        self.genLaw(self.govindex)
+        self.genTech(self.sizeindex,self.atindex,self.popindex,self.govindex)
+        self.worldgen(self.sizeindex,self.atindex,self.popindex,self.govindex,self.hydroindex)
+
 
     def getSystemContents(self):
         for i in range(4):
@@ -160,7 +146,7 @@ class genworld:
         world['law level']= lawLevel[totalindex]
         return totalindex
 
-    def genTech(self,sizeindex,atindex,popindex):
+    def genTech(self,sizeindex,atindex,popindex,govindex):
         totalindex = random.randint(1,6)
         print(totalindex)
         if world['starport']=='A':
@@ -208,6 +194,15 @@ class genworld:
         print(totalindex)
         world['tech level'] = self.techLevel[totalindex]
 
-for i in range(100):
-    print('world',i)
-    a = genworld()
+    def worldgen(self,sizeindex,atindex,popindex,govindex,hydroindex):
+        world['name'] = self.genName()
+        self.getSystemContents()
+        
+
+a = genWorld()
+print(a.worldgen())
+#b = genworld()
+#c = genworld()
+#d = genworld()
+#e = genworld()
+#f = genworld()
