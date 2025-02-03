@@ -53,15 +53,14 @@ size = (0,1,2,3,4,5,6,7,8,9,'A')
 atmosphere = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F')
 hydrographics = (0,1,2,3,4,5,6,7,8,9,'A')
 population = (0,1,2,3,4,5,6,7,8,9,'A')
-governmentLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D')
-lawLevel = (0,1,2,3,4,5,6,7,8,9,'A','A','A','A','A','A','A','A','A','A')
-techLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','G')
+governmentLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F')
+lawLevel = (0,1,2,3,4,5,6,7,8,9,'A')
+techLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G')
 world = {'starport':'','navalBase':'','scoutBase':'','gasGiant':'','name':'','size':'','atmosphere':'','hydrographics':'','population':'','government level':'','law level':'','tech level':'',}
 values = (starport,navalBase,scoutBase,gasGiant)
 namestring = 'POIUYTREWQASDFGHJKLMNBVCXZ0987654321'
 
 class genWorld:
-
 
     def __init__(self): #world is the main dictionary
         self.world = {'starport':'','navalBase':'','scoutBase':'','gasGiant':'','name':'','size':'','atmosphere':'','hydrographics':'','population':'','government level':'','law level':'','tech level':''}
@@ -69,18 +68,33 @@ class genWorld:
         self.genName()
         sizeIndex = self.genSize()
         atIndex = self.genAtmosphere(sizeIndex)
-        hydroIndex = self.genHydro(sizeIndex,atIndex)
-        popindex = self.genPop()
+        self.genHydro(sizeIndex,atIndex)
+        popIndex = self.genPop()
+        govtIndex = self.genGovt(popIndex)
+        self.genLaw(govtIndex)
+        self.genTech(sizeIndex,atIndex,popIndex)
+
 
 
     def getSystemContents(self): #for starport navalbase scoutbase and gas giant
-        for i in range(4):
-            val = values[i]
-            dictThing = valuesDict[i]
-            roll1 = random.randint(1,6)
-            roll2 = random.randint(1,6)
-            totalindex = roll1 + roll2 - 2  #-2 so that is goes to the right index value
-            self.world[dictThing] = val[totalindex]
+        starIndex = random.randint(1,6) + random.randint(1,6) - 2
+        self.world['starport'] = starport[starIndex]
+        self.world['navalBase'] = None
+        if starIndex < 5:
+            navelIndex = random.randint(1,6) + random.randint(1,6) - 2
+            self.world['navalBase'] = navalBase[navelIndex]
+        scoutIndex = random.randint(1,6) + random.randint(1,6) - 2
+        if self.world['starport'] == 'C':
+            scoutIndex -= 1
+        elif self.world['starport'] == 'B':
+            scoutIndex -= 2
+        elif self.world['starport'] == 'A':
+            scoutIndex -= 3
+        self.world['scoutBase'] = scoutBase[scoutIndex]
+        if starIndex >= 8:
+            self.world['scoutBase'] = None
+        gasIndex = random.randint(1,6) + random.randint(1,6) - 2
+        self.world['gasGiant'] = gasGiant[starIndex]
 
     def genName(self):
         name = ''
@@ -114,7 +128,7 @@ class genWorld:
         roll1 = random.randint(1,6)
         roll2 = random.randint(1,6)
         totalindex = roll1 + roll2 - 2
-        world['population'] = population[totalindex]
+        self.world['population'] = population[totalindex]
         return totalindex
 
     def genHydro(self,sIndex,aIndex):
@@ -129,82 +143,65 @@ class genWorld:
             totalindex = 10
         if sIndex <= 1:
             totalindex = 0
-        world['hydrographics'] = hydrographics[totalindex]
+        self.world['hydrographics'] = hydrographics[totalindex]
 
     def genGovt(self,pIndex):
         roll1 = random.randint(1,6)
         roll2 = random.randint(1,6)
         totalindex = roll1 + roll2 - 7 + pIndex 
-        world['government level'] = governmentLevel[totalindex]
+        if totalindex < 0:
+            totalindex = 0
+        self.world['government level'] = governmentLevel[totalindex]
         return totalindex
 
     def genLaw(self,gIndex):
         roll1 = random.randint(1,6)
         roll2 = random.randint(1,6)
         totalindex = roll1 + roll2 - 7 + gIndex 
-        world['law level']= lawLevel[totalindex]
+        if totalindex < 0:
+            totalindex = 0
+        if totalindex > 10:
+            totalindex = 10
+        self.world['law level']= lawLevel[totalindex]
         return totalindex
 
-    def genTech(self,sizeindex,atindex,popindex,govindex):
+    def genTech(self,sIndex,aIndex,pIndex):
         totalindex = random.randint(1,6)
-        print(totalindex)
-        if world['starport']=='A':
+        if self.world['starport']=='A':
             totalindex += 6
-            print(1)
-        if world['starport']=='B':
+        if self.world['starport']=='B':
             totalindex += 4
-            print(2)
-        if world['starport']=='C':
+        if self.world['starport']=='C':
             totalindex += 2
-            print(3)
-        if world['starport']=='X':
+        if self.world['starport']=='X':
             totalindex -= 4
-            print(4)
-        if sizeindex <= 1:
+        if sIndex <= 1:
             totalindex += 2
-            print(5)
-        if 2 <= sizeindex <= 4:
+        if 2 <= sIndex <= 4:
             totalindex += 1
-            print(6)
-        if atindex <= 3 or 10 <= atindex <= 14:
+        if aIndex <= 3 or 10 <= aIndex <= 14:
             totalindex += 1
-            print(7)
-        if world['hydrographics'] == 9:
+        if self.world['hydrographics'] == 9:
             totalindex += 1
-            print(8)
-        if world['hydrographics'] == 'A':
+        if self.world['hydrographics'] == 'A':
             totalindex += 2
-            print(9)
-        if 1 <= popindex <= 5:
+        if 1 <= pIndex <= 5:
             totalindex += 1
-            print(10)
-        if world['population'] == 9:
+        if self.world['population'] == 9:
             totalindex += 2
-            print(11)
-        if world['population'] == 'A':
+        if self.world['population'] == 'A':
             totalindex += 4
-            print(12)
-        if world['government level'] == 0 or world['government level'] == 5:
+        if self.world['government level'] == 0 or self.world['government level'] == 5:
             totalindex += 1
-            print(13)
-        if world['government level'] == 'D':
+        if self.world['government level'] == 'D':
             totalindex -= 2
-            print(14)
-        print(totalindex)
-        world['tech level'] = techLevel[totalindex]
+        if totalindex < 0:
+            totalindex = 0
+        if totalindex > 16: #I did add this to prevent it from breaking as I believe that it is possible to have a value over 16
+            totalindex = 16
+        self.world['tech level'] = techLevel[totalindex]
 
         
 
 a = genWorld()
-for i in a.world:
-    print(i,a.world[i])
 
-
-b = genWorld()
-for i in b.world:
-    print(i,b.world[i])
-#b = genworld()
-#c = genworld()
-#d = genworld()
-#e = genworld()
-#f = genworld()
