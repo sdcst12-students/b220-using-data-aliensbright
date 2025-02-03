@@ -58,32 +58,29 @@ lawLevel = (0,1,2,3,4,5,6,7,8,9,'A','A','A','A','A','A','A','A','A','A')
 techLevel = (0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','G')
 world = {'starport':'','navalBase':'','scoutBase':'','gasGiant':'','name':'','size':'','atmosphere':'','hydrographics':'','population':'','government level':'','law level':'','tech level':'',}
 values = (starport,navalBase,scoutBase,gasGiant)
+namestring = 'POIUYTREWQASDFGHJKLMNBVCXZ0987654321'
 
 class genWorld:
 
-    valuesDict = ('starport','navalBase','scoutBase','gasGiant')
-    namestring = 'POIUYTREWQASDFGHJKLMNBVCXZ0987654321'
+
+    def __init__(self): #world is the main dictionary
+        self.world = {'starport':'','navalBase':'','scoutBase':'','gasGiant':'','name':'','size':'','atmosphere':'','hydrographics':'','population':'','government level':'','law level':'','tech level':''}
+        self.getSystemContents()
+        self.genName()
+        sizeIndex = self.genSize()
+        atIndex = self.genAtmosphere(sizeIndex)
+        hydroIndex = self.genHydro(sizeIndex,atIndex)
+        popindex = self.genPop()
 
 
-    def __init__(self):
-        self.sizeindex = self.genSize()
-        self.atindex = self.genAtmosphere(self.sizeindex)
-        self.popindex = self.genPop()
-        self.hydroindex = self.genHydro(self.sizeindex,self.atindex)
-        self.govindex = self.genGovt(self.popindex)
-        self.genLaw(self.govindex)
-        self.genTech(self.sizeindex,self.atindex,self.popindex,self.govindex)
-        self.worldgen(self.sizeindex,self.atindex,self.popindex,self.govindex,self.hydroindex)
-
-
-    def getSystemContents(self):
+    def getSystemContents(self): #for starport navalbase scoutbase and gas giant
         for i in range(4):
             val = values[i]
             dictThing = valuesDict[i]
             roll1 = random.randint(1,6)
             roll2 = random.randint(1,6)
             totalindex = roll1 + roll2 - 2  #-2 so that is goes to the right index value
-            world[dictThing] = val[totalindex]
+            self.world[dictThing] = val[totalindex]
 
     def genName(self):
         name = ''
@@ -91,24 +88,26 @@ class genWorld:
             x = random.randint(0,35)
             stringval = namestring[x]
             name += stringval
-        return name
+        self.world['name']=name
 
     def genSize(self):
         roll1 = random.randint(1,6)
         roll2 = random.randint(1,6)
         totalindex = roll1 + roll2 - 2
-        world['size']=size[totalindex]
+        self.world['size']=size[totalindex]
         return totalindex
 
     def genAtmosphere(self,sIndex):
         if sIndex==0:
-            world['atmosphere']=atmosphere[0]
+            self.world['atmosphere']=0
             return 0
         else:
             roll1 = random.randint(1,6)
             roll2 = random.randint(1,6)
             totalindex = roll1 + roll2 - 7 + sIndex
-            world['atmosphere'] = atmosphere[totalindex]
+            if totalindex < 0:
+                totalindex = 0
+            self.world['atmosphere'] = atmosphere[totalindex]
             return totalindex
 
     def genPop(self):
@@ -124,12 +123,12 @@ class genWorld:
         totalindex = roll1 + roll2 - 7 + sIndex 
         if aIndex <= 1 or aIndex >= 10:
             totalindex -= 4
-        if sIndex <= 1:
-            totalindex = 0
         if totalindex < 0:
             totalindex = 0
         elif totalindex > 10:
             totalindex = 10
+        if sIndex <= 1:
+            totalindex = 0
         world['hydrographics'] = hydrographics[totalindex]
 
     def genGovt(self,pIndex):
@@ -164,7 +163,7 @@ class genWorld:
         if sizeindex <= 1:
             totalindex += 2
             print(5)
-        if 1 < sizeindex <= 4:
+        if 2 <= sizeindex <= 4:
             totalindex += 1
             print(6)
         if atindex <= 3 or 10 <= atindex <= 14:
@@ -192,15 +191,18 @@ class genWorld:
             totalindex -= 2
             print(14)
         print(totalindex)
-        world['tech level'] = self.techLevel[totalindex]
+        world['tech level'] = techLevel[totalindex]
 
-    def worldgen(self,sizeindex,atindex,popindex,govindex,hydroindex):
-        world['name'] = self.genName()
-        self.getSystemContents()
         
 
 a = genWorld()
-print(a.worldgen())
+for i in a.world:
+    print(i,a.world[i])
+
+
+b = genWorld()
+for i in b.world:
+    print(i,b.world[i])
 #b = genworld()
 #c = genworld()
 #d = genworld()
