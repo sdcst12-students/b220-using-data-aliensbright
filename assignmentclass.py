@@ -205,3 +205,5 @@ class genWorld:
 
 a = genWorld()
 
+for i in a.world:
+    print(i,a.world[i])
